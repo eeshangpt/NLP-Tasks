@@ -1,0 +1,12 @@
+data/**
+.idea/**
+__pycache__/**
+*.pyc
+*.pyo
+*.so
+*.egg
+*.egg-info
+*.dist-info
+*.class
+*.o
+*.env
