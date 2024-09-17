@@ -1,4 +1,4 @@
-from .sentiment_analysis import SentimentClassifier, TFSentimentClassifier, MultiClassSentimentClassifier
+from .sentiment_analysis import SentimentClassifier, TFSentimentClassifier, TextClassifier
 from .zero_shot import ZeroShotClassifier
 
-__all__ = ["ZeroShotClassifier", "SentimentClassifier", "TFSentimentClassifier", "MultiClassSentimentClassifier"]
+__all__ = ["ZeroShotClassifier", "SentimentClassifier", "TFSentimentClassifier", "TextClassifier"]

@@ -193,9 +193,9 @@ class TFSentimentClassifier(BaseClassifier):
         return self.model.config.id2label[predicted_class_id]
 
 
-class MultiClassSentimentClassifier(BaseClassifier):
+class TextClassifier(BaseClassifier):
     """
-    A class for multi-class sentiment analysis.
+    A class for text classification in multiple categories.
 
     Attributes
     ----------
@@ -220,6 +220,84 @@ class MultiClassSentimentClassifier(BaseClassifier):
     def __init__(
         self,
         model_name: str = "SamLowe/roberta-base-go_emotions",
+    ):
+        """
+        Initialize the sentiment analysis classifier.
+
+        Parameters
+        ----------
+        model_name: str
+            The name of the model to use for classification
+        """
+        self._model_name = model_name
+        self._score_df = None
+        self._initialize_model()
+
+    def _initialize_model(self):
+        """
+        Initialize the model.
+
+        Returns
+        -------
+        None
+        """
+        self.model = pipeline("text-classification", model=self._model_name)
+
+    def _predict_sentiment(self, text: List[str]):
+        """
+        Predict the sentiment of the text.
+
+        Parameters
+        ----------
+        text: List[str]
+            The texts to predict the sentiment of.
+
+        Returns
+        -------
+        None
+        """
+        output = self.model(text)
+        output = {k: [d[k] for d in output] for k in output[0]}
+
+        self._score_df = pd.DataFrame(
+            {"sentiment": output["label"], "score": output["score"]}
+        )
+
+    def _calculate_final_sentiment(self):
+        """
+        Calculate the final predicted sentiment.
+
+        Returns
+        -------
+        List
+            The final predicted sentiments.
+        """
+        return self._score_df["sentiment"].values.tolist()
+
+    def predict(self, text: List[str]):
+        """
+        Predict the sentiment of the text.
+
+        Parameters
+        ----------
+        text:   List[str]
+            The texts to predict the sentiment of.
+
+        Returns
+        -------
+        List
+            The final predicted sentiments.
+        """
+        self._predict_sentiment(text)
+        return self._calculate_final_sentiment()
+
+
+class FinanceSentimentClassifier(BaseClassifier):
+    """
+    """
+    def __init__(
+        self,
+        model_name: str = "ProsusAI/finbert",
     ):
         """
         Initialize the sentiment analysis classifier.

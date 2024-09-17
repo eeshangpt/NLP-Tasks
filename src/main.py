@@ -1,6 +1,6 @@
 from warnings import filterwarnings
 
-from classification import MultiClassSentimentClassifier
+from classification import TextClassifier
 
 # from classification import SentimentClassifier
 # from classification import TFSentimentClassifier
@@ -26,15 +26,25 @@ filterwarnings("ignore")
 # tf_snet_class = TFSentimentClassifier()
 # print(tf_snet_class.predict("I love this movie!"))
 
-multi_sentiment_classifier = MultiClassSentimentClassifier()
+# multi_sentiment_classifier = TextClassifier()
+# print(
+#     multi_sentiment_classifier.predict(
+#         [
+#             "The team's hard work and dedication paid off with a successful project completion.",
+#             "I'm disappointed with the service I received at the restaurant yesterday.",
+#             "The meeting is scheduled for 2:00 PM.",
+#             "Yeah. That crap of a car caused a lot of inconvenience.",
+#             "I really liked the coffee, the tea and most importantly the company."
+#         ]
+#     )
+# )
+
+finance_classifier = TextClassifier(model_name="ProsusAI/finbert")
 print(
-    multi_sentiment_classifier.predict(
+    finance_classifier.predict(
         [
-            "The team's hard work and dedication paid off with a successful project completion.",
-            "I'm disappointed with the service I received at the restaurant yesterday.",
-            "The meeting is scheduled for 2:00 PM.",
-            "Yeah. That crap of a car caused a lot of inconvenience.",
-            "I really liked the coffee and company."
+            "Stock prices plummeted amid uncertainties surrounding US election.",
+            "Investors are optimistic about the future, contributing to a bullish trend in the stock market with a gain of 150 points.",
         ]
     )
 )
