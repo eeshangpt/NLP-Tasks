@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 import numpy as np
 import pandas as pd
@@ -94,11 +94,28 @@ class TFNamedEntityRecognizer(BaseRecognizer):
         predicted_labels = tf.argmax(output.logits, axis=2).numpy()
         return predicted_labels
 
-    def predict(self, texts: str) -> List:
+    def _post_process_results(self, predicted_labels, predicted_tokens):
+        """"""
+        result_dict, current_entity, current_label = {}, "", None
+        for tkn, lbl in zip(predicted_tokens, predicted_labels[0]):
+            label = self._model.config.id2label[lbl]
+            entity_type = label.split("-", 1)[1] if "-" in label else "O"
+
+            if entity_type != "O":
+                if tkn.startswith("##"):
+                    current_entity += tkn[2:]
+                else:
+                    current_entity += " " + tkn if current_entity else tkn
+                current_label = entity_type
+            elif current_entity:
+                result_dict[current_entity] = current_label
+                current_entity, current_label = "", None
+        return result_dict
+
+    def predict(self, texts: str) -> Dict:
         """"""
         predicted_tokens, tokens = self._tokenize(texts)
         predicted_labels = self._predict_tokens(tokens)
-        return [
-            (tkn, self._model.config.id2label[lbl])
-            for tkn, lbl in zip(predicted_tokens, predicted_labels[0])
-        ]
+
+        result_dict = self._post_process_results(predicted_labels, predicted_tokens)
+        return result_dict
