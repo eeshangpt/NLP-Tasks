@@ -1,10 +1,16 @@
+import os
 from warnings import filterwarnings
 
-from classification import TextClassifier
+from dotenv import load_dotenv
 
+from named_entity import TFNamedEntityRecognizer
+
+# from named_entity import NamedEntityRecognizer
 # from classification import SentimentClassifier
 # from classification import TFSentimentClassifier
 # from classification import ZeroShotClassifier
+
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), "dev.env"))
 
 filterwarnings("ignore")
 
@@ -39,12 +45,30 @@ filterwarnings("ignore")
 #     )
 # )
 
-finance_classifier = TextClassifier(model_name="ProsusAI/finbert")
-print(
-    finance_classifier.predict(
-        [
-            "Stock prices plummeted amid uncertainties surrounding US election.",
-            "Investors are optimistic about the future, contributing to a bullish trend in the stock market with a gain of 150 points.",
-        ]
-    )
-)
+# finance_classifier = TextClassifier(model_name="ProsusAI/finbert")
+# print(
+#     finance_classifier.predict(
+#         [
+#             "Stock prices plummeted amid uncertainties surrounding US election.",
+#             "Investors are optimistic about the future, contributing to a bullish trend in the stock market with a gain of 150 points.",
+#         ]
+#     )
+# )
+
+# ner_model = NamedEntityRecognizer(aggregation_strategy="simple")
+# pprint(
+#     ner_model.predict(
+#         [
+#             "Apple Inc. is set to launch its latest iPhone this month.",
+#             "We went to The Louvre and the Eiffel Tower",
+#         ]
+#     )
+# )
+
+tf_ner_model = TFNamedEntityRecognizer()
+texts = [
+    "Apple Inc. is set to launch its latest iPhone this month.",
+    "Apple Inc. was founded by Steve Wozniac, Steve Jobs, and Ronald Wayne.",
+]
+for text in texts:
+    tf_ner_model.predict(text)
