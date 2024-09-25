@@ -1,5 +1,6 @@
 data/**
 .idea/**
+notebooks/**
 __pycache__/**
 *.pyc
 *.pyo
